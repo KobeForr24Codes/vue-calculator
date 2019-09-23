@@ -1,11 +1,8 @@
 <template>
   <v-app>
-    <v-card
-      class="mx-auto my-auto"
-      width="500"
-    >
+    <v-card class="mx-auto my-auto" width="500">
       <div style="background-color: #1C1C1C" class="text-end pa-5">
-        <v-sheet color="#1C1C1C" class="pa-5 display-3 white--text" tile>0</v-sheet>
+        <v-sheet color="#1C1C1C" class="pa-5 display-3 white--text" tile>{{ inputs || 0 }}</v-sheet>
       </div>
       <v-row no-gutters>
         <v-col
@@ -20,7 +17,7 @@
             v-ripple
             :color="item.color"
             class="pa-5 text-center display-3 calc-btn"
-            @click=""
+            @click="onPress(item.sign)"
           ><span :class="item.textColor">{{ item.sign }}</span></v-sheet>
         </v-col>
         <v-col
@@ -71,23 +68,41 @@ export default {
         {sign: '±', color: '#D4D4D2'},
         {sign: '%', color: '#D4D4D2'},
         {sign: '÷', color: '#FF9500', textColor: 'white--text'},
-        {sign: '7', color: '#EEEEEE'},
-        {sign: '8', color: '#EEEEEE'},
-        {sign: '9', color: '#EEEEEE'},
+        {sign: 7, color: '#EEEEEE'},
+        {sign: 8, color: '#EEEEEE'},
+        {sign: 9, color: '#EEEEEE'},
         {sign: '×', color: '#FF9500', textColor: 'white--text'},
-        {sign: '4', color: '#EEEEEE'},
-        {sign: '5', color: '#EEEEEE'},
-        {sign: '6', color: '#EEEEEE'},
+        {sign: 4, color: '#EEEEEE'},
+        {sign: 5, color: '#EEEEEE'},
+        {sign: 6, color: '#EEEEEE'},
         {sign: '-', color: '#FF9500', textColor: 'white--text'},
-        {sign: '1', color: '#EEEEEE'},
-        {sign: '2', color: '#EEEEEE'},
-        {sign: '3', color: '#EEEEEE'},
+        {sign: 1, color: '#EEEEEE'},
+        {sign: 2, color: '#EEEEEE'},
+        {sign: 3, color: '#EEEEEE'},
         {sign: '+', color: '#FF9500', textColor: 'white--text'}
       ],
       bottomLine: [
         {sign: '.', color: '#EEEEEE'},
         {sign: '=', color: '#FF9500', textColor: 'white--text'}
-      ]
+      ],
+      inputs: '',
+      calculation: []
+    }
+  },
+  methods: {
+    onPress (sign) {
+      if (sign === parseInt(sign, 10)) this.onNumber(sign)
+      if (sign === '+') this.onAddSign()
+    },
+    onNumber (number) {
+      this.inputs = this.inputs + number
+    },
+    onAddSign () {
+      this.inputs.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+      if (this.inputs > 0) {
+        this.calculation.push(this.number)
+        this.inputs += '+'
+      }
     }
   }
 };
