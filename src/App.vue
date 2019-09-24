@@ -2,7 +2,7 @@
   <v-app>
     <v-card class="mx-auto my-auto" width="500">
       <div style="background-color: #1C1C1C" class="text-end pa-5">
-        <v-sheet color="#1C1C1C" class="pa-5 display-3 white--text" tile>{{ inputs || 0 }}</v-sheet>
+        <v-sheet color="#1C1C1C" class="pa-5 display-3 white--text" tile>{{ displayInputs || 0 }}</v-sheet>
       </div>
       <v-row no-gutters>
         <v-col
@@ -34,6 +34,32 @@
           >0</v-sheet>
         </v-col>
         <v-col
+          cols="12"
+          sm="3"
+          class="border-color"
+        >
+          <v-sheet
+            tile
+            v-ripple
+            color="#EEEEEE"
+            class="pa-5 text-center display-3 calc-btn"
+            @click=""
+          >.</v-sheet>
+        </v-col>
+        <v-col
+          cols="12"
+          sm="3"
+          class="border-color"
+        >
+          <v-sheet
+            tile
+            v-ripple
+            color="#FF9500"
+            class="pa-5 text-center display-3 calc-btn"
+            @click="onEquals"
+          >=</v-sheet>
+        </v-col>
+        <!-- <v-col
           v-for="item in bottomLine"
           :key="item.index"
           cols="12"
@@ -45,9 +71,9 @@
             v-ripple
             :color="item.color"
             class="pa-5 text-center display-3 calc-btn"
-            @click=""
-          >{{ item.sign }}</v-sheet>
-        </v-col>
+            @click="onPress(item.sign)"
+          ><span :class="item.textColor">{{ item.sign }}</span></v-sheet>
+        </v-col> -->
       </v-row>
     </v-card> 
   </v-app>
@@ -85,27 +111,31 @@ export default {
         {sign: '.', color: '#EEEEEE'},
         {sign: '=', color: '#FF9500', textColor: 'white--text'}
       ],
+      displayInputs: '',
       inputs: '',
-      calculation: []
+      calculation: [],
+      operators: ['×', '÷']
     }
   },
   methods: {
     onPress (sign) {
-      if (sign === parseInt(sign, 10)) this.onNumber(sign)
-      if (sign === '+') this.onAddSign()
-    },
-    onNumber (number) {
-      this.inputs = this.inputs + number
-    },
-    onAddSign () {
-      this.inputs.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-      if (this.inputs > 0) {
-        this.calculation.push(this.number)
-        this.inputs += '+'
+      this.displayInputs += sign
+
+      if (this.operators.includes(sign)) {
+        if (sign === '×' ) {
+          this.inputs += '*'
+        } else {
+          this.inputs += '/'
+        }
+      } else {
+        this.inputs += sign
       }
+    },
+    onEquals () {
+      this.displayInputs = this.inputs = eval(this.displayInputs)
     }
   }
-};
+}
 </script>
 
 <style scoped>
