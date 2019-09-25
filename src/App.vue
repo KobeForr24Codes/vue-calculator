@@ -30,7 +30,7 @@
             v-ripple
             color="#EEEEEE"
             class="pa-5 text-center display-3 calc-btn"
-            @click=""
+            @click="onPress('0')"
           >0</v-sheet>
         </v-col>
         <v-col
@@ -43,7 +43,7 @@
             v-ripple
             color="#EEEEEE"
             class="pa-5 text-center display-3 calc-btn"
-            @click=""
+            @click="onPress('.')"
           >.</v-sheet>
         </v-col>
         <v-col
@@ -55,7 +55,7 @@
             tile
             v-ripple
             color="#FF9500"
-            class="pa-5 text-center display-3 calc-btn"
+            class="pa-5 text-center display-3 calc-btn white--text"
             @click="onEquals"
           >=</v-sheet>
         </v-col>
@@ -114,14 +114,15 @@ export default {
       displayInputs: '',
       inputs: '',
       calculation: [],
-      operators: ['×', '÷']
+      operatorsToChange: ['×', '÷'],
+      operators: ['+', '-', '÷', '×']
     }
   },
   methods: {
     onPress (sign) {
       this.displayInputs += sign
-
-      if (this.operators.includes(sign)) {
+      if (sign === 'C') this.displayInputs = this.inputs = ''
+      if (this.operatorsToChange.includes(sign)) {
         if (sign === '×' ) {
           this.inputs += '*'
         } else {
@@ -132,7 +133,16 @@ export default {
       }
     },
     onEquals () {
-      this.displayInputs = this.inputs = eval(this.displayInputs)
+      let str = '' + this.inputs
+      if (str.slice(-1) === '%') {
+        str.slice(0, -1)
+        this.getPercentage(str)
+      } else {
+        this.displayInputs = this.inputs = eval(this.displayInputs)
+      }
+    },
+    getPercentage (input) {
+      this.displayInputs = this.inputs = parseInt(input) / 100
     }
   }
 }
